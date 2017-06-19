@@ -1,21 +1,16 @@
 #pragma once
 
+// algorithms for std::tuple
+// 1. Check for type in tuple
+// 2. Delete void type from tuple
+// 3. Concatenate tuple
+// 4. Shrink tuple (for example std::tuple<int,void,int,unsigned,char,unsigned> 
+//                              -> std::tuple<int,void,unsigned,char>)
+// 5. for_each element of tuple
+
+
 #include <tuple>
 #include <type_traits>
-
-//template <typename T, typename... Types>
-//auto tuple_has_type(T, std::tuple<T, Types...>) -> std::true_type;
-//
-////template <typename T, typename... Types>
-////auto tuple_has_type(void, std::tuple<T, Types...>) -> std::true_type;
-//
-//template <typename T>
-//auto tuple_has_type(T, std::tuple<>) -> std::false_type;
-//
-//template <typename T, typename Other, typename... Types>
-//auto tuple_has_type(T, std::tuple<Other, Types...>)
-//    -> decltype(tuple_has_type(T(), std::tuple<Types...>()));
-
 
 
 template <typename T, typename Tuple>
@@ -65,40 +60,26 @@ struct tuple_clean_void<std::tuple<Ts...>> {
 
 
 /*
- * Cat tuples operation
+ * Join operation operation
  */
 
 template <typename... Typles>
-struct tuple_cat;
+struct tuple_join;
 
-//template <typename T>
-//struct tuple_cat<T> {
-//    using type = T;
-//};
 template <typename... Ts>
-struct tuple_cat<std::tuple<Ts...>> {
+struct tuple_join<std::tuple<Ts...>> {
     using type = std::tuple<Ts...>;
 };
 
 template <typename... Ts, typename... Ts1>
-struct tuple_cat<std::tuple<Ts...>, std::tuple<Ts1...>> {
+struct tuple_join<std::tuple<Ts...>, std::tuple<Ts1...>> {
     using type = std::tuple<Ts..., Ts1...>;
 };
 
 template <typename... Ts, typename... Ts1, typename... Tuples>
-struct tuple_cat<std::tuple<Ts...>, std::tuple<Ts1...>, Tuples...> {
-    using type = typename tuple_cat<std::tuple<Ts..., Ts1...>, Tuples...>::type;
+struct tuple_join<std::tuple<Ts...>, std::tuple<Ts1...>, Tuples...> {
+    using type = typename tuple_join<std::tuple<Ts..., Ts1...>, Tuples...>::type;
 };
-
-//template <typename T>
-//struct tuple_cat {
-//    using type = T;
-//};
-
-//template <typename A, typename B, typename... Tuples>
-//struct tuple_cat {
-//    using type = tuple_cat_impl<A,B 
-//};
 
 /*
  * Shrink tuples routine

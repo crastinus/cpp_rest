@@ -21,6 +21,9 @@ auto handler = root(std::string,
                            method("setup", &persistent::setup ),
                            method("extract", &persistent::extract)));
 
+/*\brief
+ * contains all information for request
+ */
 struct request_instance {
     request_instance(request& req, response& resp)
         : req_(req), resp_(resp), handle_(false) {
@@ -41,12 +44,7 @@ struct request_instance {
          return handle_;
      }
 
-     // Request instance must have operations
-     // BufferType const& request_source();
-     // void set_response(int code, BufferType&& src);
-     // void set_text_response(int code, BufferType&&src);
-     // bool handled();
-     request&  req_;
+    request&  req_;
      response& resp_;
      bool      handle_;
 };

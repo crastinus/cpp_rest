@@ -2,7 +2,7 @@
 
 #include "method.hpp"
 #include "method_apply.hpp"
-#include "comparation.hpp"
+#include "comparasion.hpp"
 #include "prefix.hpp"
 //#include "rest.hpp"
 
@@ -10,14 +10,7 @@
 //#include <vector>
 #include <string>
 
-//// \brief
-//// type for an executing request
-//// siplified walk throught function
-//// i don't know for now how to unified this inteface
-//struct request_instance {
-//    rest::request  request_;
-//    rest::response response_;
-//};
+
 
 /*\brief
  * Root of all rest methods
@@ -30,7 +23,7 @@ struct rest_root {
     using methods_t = std::tuple<Methods...>;
 
     using class_tuple_t =
-        typename tuple_cat<typename Methods::class_tuple_t...>::type;
+        typename tuple_join<typename Methods::class_tuple_t...>::type;
     using class_tuple_rm_void_t = typename tuple_clean_void<class_tuple_t>::type;
     using classes_t             = decltype(shrink_tuple(class_tuple_rm_void_t()));
 
@@ -77,6 +70,7 @@ struct rest_root {
    void walk_concrete(RequestInstance& inst,
                       Range            rng,
                       rest_prefix<PrefixPath, PrefixMethods...>& pref) {
+       // starts with
        if (!compare_partial(rng, PrefixPath()))
            return;
        for_each(pref.methods_, [&, this](auto& method) {
@@ -87,6 +81,7 @@ struct rest_root {
 
     template <typename RequestInstance, typename Range>
     void walk(RequestInstance& inst, Range rng) {
+        // starts with
         if (!compare_partial(rng, path_t()))
             return;
         for_each(methods_, [&, this](auto& method) {

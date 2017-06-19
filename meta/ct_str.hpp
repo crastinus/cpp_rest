@@ -1,7 +1,7 @@
 #pragma  once
 
 // Compile time string 
-// Have a split compile time operation
+// In this file implements compile time split operation
 #include <tuple>
 
 #define CHARSEQ1(n,x) grabch<0x##n##0>(x)

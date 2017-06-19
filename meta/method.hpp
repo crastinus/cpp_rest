@@ -3,6 +3,7 @@
 #include <tuple>
 #include "ct_str.hpp"
 
+// This function invokes as arguments
 template <typename Class, typename ReturnType, typename InputType>
 using ref_member_ft = ReturnType (Class::*)(InputType);
 
@@ -15,7 +16,7 @@ using ref_member_void_ft = ReturnType (Class::*)();
 template < typename ReturnType>
 using ref_static_void_ft = ReturnType (*)();
 
-// workaround of instantiation
+// Metaprogramming for a class
 template <typename ClassType, typename ReturnType, typename InputType>
 struct ref_ft_impl {
     using type = ref_member_ft<ClassType, ReturnType, InputType>;
@@ -36,7 +37,8 @@ struct ref_ft_impl<void, ReturnType, void> {
     using type = ref_static_void_ft<ReturnType>;
 };
 
-
+// \brief method itself
+// stores, apply method
 template <typename Path, typename ClassType, typename ReturnType, typename InputType>
 struct rest_method {
     using path_t   = Path;
@@ -60,7 +62,13 @@ struct rest_method {
         return std::is_same<InputType, void>::value;
     }
 
-    // \param tup
+    // apply current method 
+    // 1. Deserialize src if input type is not void
+    // 2. Invoke as argument in function if this needed
+    // 3. If function_ is a member of class then use tup for invoke
+    // 4. Serialize result if ResultType is not void
+    // \param tup - tuple of possible objects for member functions
+    // \param src - source code of query
     template <typename Tuple, typename ResultType>
     ResultType apply(Tuple& tup, ResultType const& src);
 

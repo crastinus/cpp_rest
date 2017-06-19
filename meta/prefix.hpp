@@ -13,7 +13,7 @@ struct rest_prefix {
     using path_t    = Path;
     using methods_t = std::tuple<Methods...>;
 
-    using class_tuple_t = typename tuple_cat<typename Methods::class_tuple_t...>::type;
+    using class_tuple_t = typename tuple_join<typename Methods::class_tuple_t...>::type;
 
 
     rest_prefix(Methods&&... meths)

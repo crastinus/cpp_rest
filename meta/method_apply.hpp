@@ -6,19 +6,9 @@
 #include <utils/reflection/json/rj_writing_visitor.hpp>
 #include "method.hpp"
 
-//// for future r-value callbacks. But not for now
-//// rvalue referenced
-//template <typename OriginalInputType, typename InputType>
-//InputType&& meta_forward(InputType& input, std::true_type) {
-//    return std::move(input);
-//}
-//
-//// not referenced at all
-//template <typename OriginalInputType, typename InputType>
-//InputType& meta_forward(InputType& input, std::false_type) {
-//    return input;
-//}
 
+// workaround about void type 
+// void type cannot be instantiated
 template<typename Type>
 struct holder {
     Type value_;
@@ -27,7 +17,10 @@ struct holder {
 template<>
 struct holder<void>{};
 
-// \brief helper of helper
+// helper of helper
+// C++ not allowed partial specialization for a functions
+// using this workaround for handle any possible combination
+// of InputType,MemberFunction and ReturnType
 template <typename ClassType, typename ReturnType, typename InputType>
 struct invoke {
     template <typename FunctionRef, typename ClassSource>
@@ -117,6 +110,7 @@ struct invoke<void, void, void> {
     }
 };
 
+// serialize any possible type
 template <typename BufferType, typename Type>
 struct serialization {
 
@@ -137,11 +131,13 @@ struct serialization {
     }
 };
 
+//serialize void
 template <typename BufferType>
 struct serialization<BufferType, void> {
     static void deserialize(BufferType const&, holder<void>&) {
     }
     static void serialize(holder<void> const&, BufferType& buffer) {
+        // if in buffer have something
         buffer = BufferType{};
     }
 };
