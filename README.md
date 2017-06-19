@@ -22,7 +22,7 @@ Suppose this functions in your application must be accessible as rest (path in c
 
 Function set\_clock doesn't return any object. Rest method for this function will be return 201 code if exception doesn't thrown.
 
-Service allow you to define handler for this rest methods as
+Library allow you to define handler for this rest methods as
 
     handler = root(BufferType, "api",
                    prefix("clock",
@@ -33,7 +33,7 @@ Service allow you to define handler for this rest methods as
 Handler walk throught api and run any method in proper way.
 
 BufferType is a source type of all objects. Every return type will be serialize in it and every input type will be deserialize from it.
-For every input/return types (temperature,clock) must be defined serialization/deserialization functions (see rest\_handlers.cpp).
+For every input/return types (temperature,clock) must be defined serialization/deserialization functions (see rest\_types.cpp).
 
 Example above implements variant for a static functions. Rest support also member function.
 Suppose function from example above is a member functions of the classes
@@ -50,7 +50,7 @@ Suppose function from example above is a member functions of the classes
         clock get_clock();
     };
 
-Handler definition now
+Handler definition with member functions
 
     handler = root(BufferType, "api",
                    prefix("clock",
@@ -58,7 +58,7 @@ Handler definition now
                        method("get", &time_point::get_clock)),
                    method("measure", &meter::last_measure));
 
-Handler for classes time\_point and meter create instances in tuple. Every instance creates staticaly. Every type object in handler must have constructor without arguments.
+Handler for classes time\_point and meter create instances in tuple. Every instance creates staticaly. Every type object in handler must have constructor without arguments or without constructor at all.
 Every instance creates once for a type ( for methods set\_clock and get\_clock creates single one time\_point class).
     
 
@@ -67,11 +67,11 @@ How to use
 
 For api must be created object with description.
 
-   auto handler = 
-     root(std::string,
-         "api",
-         prefix(
-            .....
+    auto handler = 
+      root(std::string,
+          "api",
+          prefix(
+             .....
 
 root, prefix and method macros. Macros is nesseary for creation compile time strings. In other case code will be ugly.
 root macro takes type of input/output buffer value witch contains rest payload, root path and list of prefix/method macro.
