@@ -1,5 +1,5 @@
 #pragma once
-#include "ct_str.hpp"
+#include "typestring.hpp"
 #include "method.hpp"
 #include "tuple.hpp"
 
@@ -29,6 +29,6 @@ auto make_prefix(Methods&& ...mets){
         std::forward<Methods>(mets)...);
 }
 
-#define prefix(path, ...) make_prefix<decltype(ct_str_split(ct_str_s(path)()))>(__VA_ARGS__)
+#define prefix(path, ...) make_prefix<decltype(typestring_split(typestring_s(path)()))>(__VA_ARGS__)
 
 

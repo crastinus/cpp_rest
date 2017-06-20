@@ -2,7 +2,7 @@
 // compare run time path and compile time path
 #include <string.h>
 #include <type_traits>
-#include "ct_str.hpp"
+#include "typestring.hpp"
 #include "range.hpp"
 
 
@@ -31,8 +31,8 @@ bool compare(Iterator it, CtStr&&) {
 
 // compare single one value 
 template <typename Iterator, char... C>
-inline bool compare(range<Iterator> rng, ct_str<C...>&&) {
-    return compare(rng.begin_, ct_str<C...>());
+inline bool compare(range<Iterator> rng, typestring<C...>&&) {
+    return compare(rng.begin_, typestring<C...>());
 }
 
 // compare range sequence and compile time tuple sequence

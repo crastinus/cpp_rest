@@ -99,6 +99,6 @@ auto make_root(Methods&&... mets) {
     return rest_root<BufType, Path, std::decay_t<Methods>...>(std::forward<Methods>(mets)...);
 }
 
-#define root(buf_type, path, ...) make_root<buf_type, decltype(ct_str_split(ct_str_s(path)()))>(__VA_ARGS__)
+#define root(buf_type, path, ...) make_root<buf_type, decltype(typestring_split(typestring_s(path)()))>(__VA_ARGS__)
 
 

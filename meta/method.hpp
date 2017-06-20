@@ -1,7 +1,7 @@
 #pragma once
 
 #include <tuple>
-#include "ct_str.hpp"
+#include "typestring.hpp"
 
 // This function invokes as arguments
 template <typename Class, typename ReturnType, typename InputType>
@@ -101,6 +101,6 @@ auto make_method(ref_static_void_ft<ReturnType> function) {
 }
 
 
-#define method(path, func) make_method<ct_str_s(path)>(func)
+#define method(path, func) make_method<typestring_s(path)>(func)
 
 
