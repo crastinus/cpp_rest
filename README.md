@@ -127,7 +127,7 @@ Project depends on libevent. Compiler must be c++14 compatible.
 Using
 -----
 
-Default port for a server is 3333. For now just json post supported.
+Default port for a server is 3333. For now just json POST supported.
 
 Compute sha1sum on server
 
@@ -150,7 +150,7 @@ Persist some random integer
     }
     answer: 201 OK
 
-Extract this integer. Empty payload not supported for now. Server doesn't parse this value (persistent::extract has no arguments)
+Extract this integer. Empty payload not supported for now. Server doesn't parse payload for this method (persistent::extract has no arguments)
 
     url: http://ip:3333/api/persistent/extract
     payload:
