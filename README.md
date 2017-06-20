@@ -110,3 +110,57 @@ From every path creates compile time path by template metaprogramming mechanism 
 For every function/method creates wrapper-holder class(rest\_method). 
 From function signatures extract types and creates serialization/deserialization code (deserialize input, invoke function, serialize output).  
 If function signature is method then instance of this method creates into root class as part of tuple. For every unique class creates just a single one instance.
+
+Building
+--------
+
+Project depends on libevent. Compiler must be c++14 compatible.
+
+    git clone https://github.com/crastinus/cpp_rest
+    cd cpp_rest
+    git submodule init
+    git submodule update
+    mkdir cpp_rest
+    cmake ..
+    make
+
+Using
+-----
+
+Default port for a server is 3333. For now just json post supported.
+
+Compute sha1sum on server
+
+    url: http://ip:3333/api/compute/sha1
+    payload:
+    {
+      "data" : "Some data for sha1"
+    }
+    answer: 200 OK
+    {
+      "sha1": "f07f29200a882adc357b460e8fd11a1025abb628"
+    }
+
+Persist some random integer
+
+    url: http://ip:3333/api/persistent/setup
+    payload:
+    {
+      "intValue" : 100
+    }
+    answer: 201 OK
+
+Extract this integer. Empty payload not supported for now. Server doesn't parse this value (persistent::extract has no arguments)
+
+    url: http://ip:3333/api/persistent/extract
+    payload:
+    {}
+    answer: 200 OK
+    {
+      "intValue" : 100
+    }
+
+   
+    
+
+
