@@ -14,7 +14,7 @@ log time::extract_log() {
     return result;
 }
 
-sha1 time::compute_sha1(some_string_data const& v) {
+sha1 hash::compute_sha1(some_string_data const& v) {
     sha1 result;
     result.sha1sum_ = utils::sha1(v.data_);
     return result;

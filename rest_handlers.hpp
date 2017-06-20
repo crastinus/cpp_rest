@@ -4,6 +4,9 @@
 // this is random names
 struct time {
     static log extract_log();
+};
+
+struct hash {
     sha1 compute_sha1(some_string_data const& v);
 };
 

@@ -16,7 +16,7 @@ auto handler = root(std::string,
                            method("setup", &performance::setup_datetime)),
                     prefix("compute", 
                            method("accumulate", &performance::extract ),
-                           method("sha1", &time::compute_sha1)),
+                           method("sha1", &hash::compute_sha1)),
                     prefix("persistent",
                            method("setup", &persistent::setup ),
                            method("extract", &persistent::extract)));

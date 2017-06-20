@@ -136,7 +136,7 @@ void rest_callback(struct evhttp_request* req, void* arg){
     evbuffer_add(evb, &*result.body_.begin(), result.body_.size());
 
     //result response
-    evhttp_send_reply(req, result.code_, "NoMes", evb);
+    evhttp_send_reply(req, result.code_, (result.code_ == 200 ? "OK" : "Error"), evb);
 }
 
 
