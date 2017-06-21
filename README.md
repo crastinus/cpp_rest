@@ -157,13 +157,15 @@ Extract this integer. Empty payload not supported for now. Server doesn't parse 
 
     url: http://ip:3333/api/persistent/extract
     payload:
-    {}
     answer: 200 OK
     {
       "intValue" : 100
     }
 
-   
-    
+TODO
+----
 
+- application/xml
+- other methods
+- binary data
 
