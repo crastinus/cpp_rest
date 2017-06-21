@@ -30,10 +30,10 @@ void message(Args&&... args) {
 
 rest::mime_type choose_return_format(char const* str);
 
-void rest_callback(struct evhttp_request* req, void* arg){
+void rest_callback(struct evhttp_request* req, void* /*arg*/){
 	//const char *cmdtype;
 	struct evkeyvalq *headers;
-	struct evkeyval *header;
+	//struct evkeyval *header;
 	struct evbuffer *buf;
 
    
@@ -70,49 +70,28 @@ void rest_callback(struct evhttp_request* req, void* arg){
     auto size = request.body_.size();
     evbuffer_remove(buf, data, size);
 
-    bool            accept_field_present = false;
-    rest::mime_type accept_              = rest::mime_type::NONE;
-    rest::mime_type content_type_ = rest::mime_type::NONE;
-    headers = evhttp_request_get_input_headers(req);
-//    for (header = headers->tqh_first; header; header = header->next.tqe_next) {
-       //else
+   headers = evhttp_request_get_input_headers(req);
+
     auto content_type_header = evhttp_find_header(headers, "Content-Type");
     if (content_type_header != nullptr) {
-        // content type is the most predictable values
-        if (strcmp(content_type_header, "application/json") == 0) {
-            content_type_ = rest::mime_type::JSON;
-        } else if (strcmp(content_type_header, "application/xml") == 0) {
-            content_type_ = rest::mime_type::XML;
+        if (strcmp(content_type_header, "application/json") != 0) {
+            evhttp_send_reply(req, 415, "Just application/json type supported", nullptr);
+            return;
         }
-        }
-    //}
+    }
 
     auto acc_header = evhttp_find_header(headers, "Accept");
     if (acc_header != nullptr) {
-        accept_field_present = true;
-        accept_              = choose_return_format(acc_header);
-    }
-
-    if (content_type_ == rest::mime_type::NONE){
-        evhttp_send_reply(req, 415, "Mime type not supported", nullptr);
-        return;
-    }
-
-    if (accept_ == rest::mime_type::NONE){
-        if (accept_field_present) {
-            evhttp_send_reply(req, 415, "Outcoming mime type not suported", nullptr);
+        if (choose_return_format(acc_header) != rest::mime_type::JSON) {
+            evhttp_send_reply(req, 415, "Just application/json type supported", nullptr);
             return;
-        } else
-            accept_ = rest::mime_type::JSON;
+        }
     }
 
-    if (content_type_ == rest::mime_type::XML || accept_ == rest::mime_type::XML){
-        evhttp_send_reply(req, 415, "XML does not supply for now", nullptr);
-        return;
-    }
-
-    request.mime_ = content_type_;
-    request.possible_response_mime_ = accept_;
+    // default content type is json
+    // no one another content type doesn't supported for now
+    request.mime_                   = rest::mime_type::JSON;
+    request.possible_response_mime_ = rest::mime_type::JSON;
 
     auto result = rest::execute(std::move(request));
     if (result.code_ == 201) {
@@ -163,47 +142,13 @@ int main() {
         fatal("Cannot open socket on random port (", port,")");
     }
 
-    {
-        /* Adapted from samples. */
-        struct sockaddr_storage ss;
-        ev_socklen_t            socklen = sizeof(ss);
-        char                    addrbuf[128];
-        void*                   inaddr;
-        const char*             addr;
-        int                     got_port = -1;
-
-        evutil_socket_t fd = evhttp_bound_socket_get_fd(socket);
-
-        memset(&ss, 0, sizeof(ss));
-        if (getsockname(fd, (struct sockaddr*)&ss, &socklen)) {
-            fatal("getsockname() failed");
-        }
-        if (ss.ss_family == AF_INET) {
-            got_port = ntohs(((struct sockaddr_in*)&ss)->sin_port);
-            inaddr   = &((struct sockaddr_in*)&ss)->sin_addr;
-        } else if (ss.ss_family == AF_INET6) {
-            got_port = ntohs(((struct sockaddr_in6*)&ss)->sin6_port);
-            inaddr   = &((struct sockaddr_in6*)&ss)->sin6_addr;
-        } else {
-            fatal("Weird address family ", ss.ss_family, "\n");
-        }
-        addr = evutil_inet_ntop(ss.ss_family, inaddr, addrbuf, sizeof(addrbuf));
-        if (addr) {
-            message("Listening on ", addr,":", got_port, "\n");
-       } else {
-           fatal("evutil_inet_ntop failed\n");
-        }
-    }
+    message("Listening on ", "0.0.0.0:", port, "\n");
 
     event_base_dispatch(base);
 }
 
 rest::mime_type choose_return_format(char const* str) {
-    //struct mime {
-    //    std::string name_;
-    //    float       q_factor_;
-    //};
-    
+   
     // this is not production server. Handle mime type in the easiest way
     std::string easy(str);
     bool json_found = (easy.find("application/json") != std::string::npos);
