@@ -37,8 +37,13 @@ struct ref_ft_impl<void, ReturnType, void> {
     using type = ref_static_void_ft<ReturnType>;
 };
 
-// \brief method itself
-// stores, apply method
+// \brief method holder
+// stores method reference and apply method
+//
+// \tparam Path      path to method
+// \tparam ClassType object type for method. In static member case has type void 
+// \tparam ReturnType return type of the method. If value is void return 201 code
+// \tparam InputType  input type of the method. If value is void input data doesn't deserialized
 template <typename Path, typename ClassType, typename ReturnType, typename InputType>
 struct rest_method {
     using path_t   = Path;

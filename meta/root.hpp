@@ -12,10 +12,10 @@
 
 
 
-/*\brief
- * Root of all rest methods
- * BufferType - type of the input and output data
- * Methods - types of rest_prefix and  rest_method
+/*\brief  Host of the all rest methods
+ *
+ * \tparam BufferType  type of the input and output data
+ * \tparam Methods     types of rest_prefix and  rest_method
  */
 template <typename BufferType, typename Path, typename... Methods>
 struct rest_root {

@@ -21,7 +21,8 @@ auto handler = root(std::string,
                            method("setup", &persistent::setup ),
                            method("extract", &persistent::extract)));
 
-/*\brief
+/*\brief request callback
+ *
  * contains all information for request
  */
 struct request_instance {

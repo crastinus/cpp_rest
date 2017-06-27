@@ -4,9 +4,10 @@
 #include "tuple.hpp"
 
 /*
- * \brief some rest prefix for some paths
- * Path - path to this nodes
- * Methods - rest_method and rest_prefix types
+ * \brief part of path to the method and the host
+ *
+ * \tparam Path     path to this nodes
+ * \tparam Methods  rest_method and rest_prefix types
  */
 template<typename Path, typename ...Methods>
 struct rest_prefix {
